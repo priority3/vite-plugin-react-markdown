@@ -1,6 +1,7 @@
+import Blog from '../pages/blog.md'
 import reactLogo from './assets/react.svg'
 import './App.css'
-import Blog from '../pages/blog.md'
+import A from './components/a'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
+      <A />
       <Blog />
     </div>
   )

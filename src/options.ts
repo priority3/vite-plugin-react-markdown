@@ -7,10 +7,11 @@ export function resloveOptions(userOptions: Options): ResolvedOptions {
     markdownItOptions: {},
     markdownItUses: [],
     markdownItSetup: () => {},
-    wrapperComponent: null,
-    importComponentsPath: '',
+    importComponentsPath: {},
+    wrapperComponentPath: '',
     transforms: {},
     wrapperClasses: 'markdown-body',
+    wrapperComponentName: null,
     include: null,
     exclude: null,
   }

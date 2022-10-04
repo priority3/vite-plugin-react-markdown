@@ -7,8 +7,10 @@ export default defineConfig({
   plugins: [
     react(),
     vitePluginReactMarkdown({
-      importComponents: {
-        dts: 'src/components/pages',
+      wrapperComponentName: 'ReactMarkdown',
+      wrapperComponentPath: './src/components/page',
+      importComponentsPath: {
+        ReactTest: './src/components/pages/mdtest',
       },
     }),
   ],

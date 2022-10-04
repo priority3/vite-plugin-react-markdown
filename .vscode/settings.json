@@ -1,0 +1,5 @@
+{
+  "prettier.enable": false,
+  "prettier": false,
+  "cSpell.ignoreWords": ["tsup"]
+}

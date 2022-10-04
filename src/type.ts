@@ -1,8 +1,12 @@
 import type { FilterPattern } from '@rollup/pluginutils'
 import type MarkdownIt from 'markdown-it'
 
-export type importComponentOptions = Object
-
+export interface importComponentOptions {
+  [name: string]: string
+}
+export interface AttribsType {
+  [name: string]: string
+}
 export interface Options {
   /**
    * Parse for frontmatter
@@ -23,7 +27,14 @@ export interface Options {
    *
    * @default undefined
    */
-  wrapperComponent?: string | undefined | null
+  wrapperComponentName?: string | undefined | null
+
+  /**
+   * Component path to wrapper with
+   *
+   * @default undefined
+   */
+  wrapperComponentPath?: string | undefined | null
 
   /**
    * Components are contained in markdown

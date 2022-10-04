@@ -1,7 +1,6 @@
 import { cwd } from 'process'
-import { resolve } from 'path'
-import fs from 'fs-extra'
-import type { Arrayable, Nullable, importComponentOptions } from './type'
+import { dirname, isAbsolute, relative, resolve } from 'path'
+import type { Arrayable, AttribsType, Nullable } from './type'
 /**
  * Convert `Arrayable<T>` to `Array<T>`
  *
@@ -15,12 +14,27 @@ export function toArray<T>(array?: Nullable<Arrayable<T>>): Array<T> {
   return [array]
 }
 
-export function getImportComponents(options: importComponentOptions): Array<String | undefined> {
-  const importComponents: Array<String | undefined> = []
-  toArray(options).forEach((item) => {
-    const alph = /(\w)*/g.exec(item) || []
-    importComponents.push(alph[alph?.length - 1])
-  })
+export function getComponentPath(id: string, componentPath: string): string {
+  if (!isAbsolute(componentPath))
+    componentPath = resolve(cwd(), componentPath)
+  const t = relative(dirname(id), componentPath).replaceAll(/\\/g, '/')
 
-  return importComponents
+  return t.startsWith('.') ? t : `./${t}`
+}
+const attribs = Object.entries(
+  {
+    class: 'className',
+    tabindex: 'tabIndex',
+  },
+)
+export function transformAttribs(elementAttribs: AttribsType): void {
+  if (elementAttribs) {
+    attribs.forEach((attrib) => {
+      const [name, replaceName] = attrib
+      if (elementAttribs[name]) {
+        elementAttribs[replaceName] = elementAttribs[name]
+        delete elementAttribs[name]
+      }
+    })
+  }
 }
