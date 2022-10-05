@@ -3,6 +3,7 @@ import { parseDocument } from 'htmlparser2'
 import render from 'dom-serializer'
 import frontMatter from 'front-matter'
 import { transformSync } from '@babel/core'
+import { componentPlugin } from '@mdit-vue/plugin-component'
 import { Element } from 'domhandler'
 import type { ChildNode } from 'domhandler'
 import type { TransformResult } from 'vite'
@@ -23,7 +24,7 @@ function extractEscapeToReact(html: string) {
 }
 
 function getImportComInMarkdown(html: string, wrapperComponentName: string | null) {
-  const whiteList = ['React.Fragment']
+  const whiteList = ['React.Fragment', 'React__Markdown']
   wrapperComponentName && whiteList.push(wrapperComponentName)
   const importComs = []
   let match = IMPORT_COM_REG.exec(html)
@@ -51,10 +52,13 @@ export function createMarkdown(options: ResolvedOptions) {
     ...options.markdownItOptions,
   })
 
+  markdown.use(componentPlugin)
+
   markdown.linkify.set({ fuzzyLink: false })
 
   options.markdownItUses.forEach((e) => {
     const [plugin, options] = toArray(e)
+
     markdown.use(plugin, options)
   })
   options.markdownItSetup(markdown)
@@ -75,7 +79,8 @@ export function createMarkdown(options: ResolvedOptions) {
 
     const env: MarkdownEnv = { id }
     let html = markdown.render(body, env)
-    const root = parseDocument(html, { lowerCaseTags: true })
+    const { importComs } = getImportComInMarkdown(html, wrapperComponentName)
+    const root = parseDocument(html, { lowerCaseTags: false })
     if (root.children.length) {
       Array.from(root.children).forEach((e) => {
         markCodeAsPre(e)
@@ -84,7 +89,6 @@ export function createMarkdown(options: ResolvedOptions) {
     const h = render(root, { selfClosingTags: true })
     html = extractEscapeToReact(h)
     // get import components
-    const { importComs } = getImportComInMarkdown(html, wrapperComponentName)
 
     // set class
     if (wrapperClasses) {
@@ -102,12 +106,13 @@ export function createMarkdown(options: ResolvedOptions) {
     if (wrapperComponentName && wrapperComponentPath) {
       const componentPath = getComponentPath(id, wrapperComponentPath)
       wrapperComponentImp = `import ${wrapperComponentName} from '${componentPath}'\n`
-      html = `
-        <${wrapperComponentName}>
+      html = ` const markdown = 
+        <${wrapperComponentName} attributes={${attributesString}}>
           ${html}
         </${wrapperComponentName}>
       `
     }
+    else { html = ` const markdown = ${html}` }
 
     let markdownComponentsImp = ''
     const keys = Object.keys(importComponentsPath)
@@ -121,7 +126,7 @@ export function createMarkdown(options: ResolvedOptions) {
     }
 
     const compiledReactCode = `
-      export default function ReactMarkdown (props) {
+      export default function React__Markdown () {
         ${transformSync(html, {
           ast: false,
           presets: ['@babel/preset-react'],
@@ -142,7 +147,6 @@ export function createMarkdown(options: ResolvedOptions) {
     code += `${markdownComponentsImp}\n`
     code += `${compiledReactCode}`
     code += `export const attributes = ${attributesString}`
-    console.log('🚀 ~ file: markdown.ts ~ line 141 ~ return ~ code', code)
 
     return {
       code,
@@ -155,9 +159,9 @@ export function createMarkdown(options: ResolvedOptions) {
         if (node.tagName)
           transformAttribs(node.attribs)
         if (node.tagName === 'code') {
-          // const codeContent = render(node, { decodeEntities: true })
-          // node.attribs.dangerouslySetInnerHTML = `vfm{{ __html: \`${codeContent.replace(/([\\`])/g, '\\$1')}\`}}vfm`
-          // node.childNodes = []
+          const codeContent = render(node, { decodeEntities: true })
+          node.attribs.dangerouslySetInnerHTML = `vfm{{ __html: \`${codeContent.replace(/([\\`])/g, '\\$1')}\`}}vfm`
+          node.childNodes = []
         }
         if (node.childNodes.length) {
           node.childNodes.forEach((e) => {
