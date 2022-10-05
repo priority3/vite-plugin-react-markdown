@@ -21,7 +21,8 @@
     "example:dev": "pnpm -C example run dev",
     "example:build": "pnpm -C example run build",
     "test": "vitest",
-    "build": "tsup"
+    "build": "tsup",
+    "release": "bumpp --commit --tag --push && npm publish"
   },
   "peerDependencies": {
     "react": "^18.0.0",
