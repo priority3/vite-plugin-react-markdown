@@ -7,7 +7,7 @@ Compile Markdown to React component.
 - Use Markdown as React components
 - Use React components in Markdown
 
-## Install
+## 🐱‍🚀 Install
 
 Install
 
@@ -53,7 +53,7 @@ function  App() {
 }
 ```
 
-## Use React components in Markdown
+## 🐱‍🐉 Use React components in Markdown
 
 You can even use React components inside your markdown, for example
 
@@ -62,7 +62,7 @@ You can even use React components inside your markdown, for example
 ```
 
 
-## Frontmatter
+## 👾 Frontmatter
 
 Frontmatter will be parsed,
 
@@ -123,11 +123,11 @@ export default {
 
 See [the tsdoc](./src/types.ts) for more advanced options
 
-## Example
+## 🤷‍♂️ Example
 
 See the [/example](./example).
 
-## TypeScript Shim
+## 🤷‍♀️ TypeScript Shim
 
 ```ts
 declare module '*.md' {
@@ -136,6 +136,15 @@ declare module '*.md' {
   export default ReactComponent
 }
 ```
+
+
+## 👏 Credits
+
+This project is inspired by [vite-plugin-vue-markdown](https://github.com/antfu/vite-plugin-vue-markdown)
+and mosts of code is from [geekris1/vite-plugin-react-markdown](https://github.com/geekris1/vite-plugin-react-markdown)
+
+### Compare with it:
+[geekris1/vite-plugin-react-markdown](https://github.com/geekris1/vite-plugin-react-markdown) is does'n work in wrapperComponent, and some style is not good.
 
 ## License
 

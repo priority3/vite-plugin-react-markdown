@@ -79,6 +79,7 @@ export function createMarkdown(options: ResolvedOptions) {
 
     const env: MarkdownEnv = { id }
     let html = markdown.render(body, env)
+    // get import components
     const { importComs } = getImportComInMarkdown(html, wrapperComponentName)
     const root = parseDocument(html, { lowerCaseTags: false })
     if (root.children.length) {
@@ -88,7 +89,6 @@ export function createMarkdown(options: ResolvedOptions) {
     }
     const h = render(root, { selfClosingTags: true })
     html = extractEscapeToReact(h)
-    // get import components
 
     // set class
     if (wrapperClasses) {
