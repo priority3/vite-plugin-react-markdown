@@ -1,6 +1,6 @@
 # vite-plugin-react-markdown
 
-[![NPM version](https://img.shields.io/npm/v/vite-plugin-react-markdown?color=a1b858)](https://www.npmjs.com/package/vite-plugin-vue-markdown)
+[![NPM version](https://img.shields.io/npm/v/@pity/vite-plugin-react-markdown?color=a1b858)](https://www.npmjs.com/package/@pity/vite-plugin-react-markdown)
 
 Compile Markdown to React component.
 
@@ -12,7 +12,7 @@ Compile Markdown to React component.
 Install
 
 ```bash
-npm i vite-plugin-react-markdown -D # yarn add vite-plugin-vue-markdown -D
+npm i @pity/vite-plugin-react-markdown -D # yarn add vite-plugin-vue-markdown -D
 ```
 
 Add it to `vite.config.js`
