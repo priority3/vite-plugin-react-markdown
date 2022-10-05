@@ -96,7 +96,7 @@ import {attributes} from './README.md'
 
 ```ts
 // vite.config.js
-import Markdown from 'vite-plugin-react-markdown'
+import Markdown from '@pity/vite-plugin-react-markdown'
 
 export default {
   plugins: [
