@@ -41,6 +41,9 @@ export default defineConfig({
 })
 ```
 
+> the default `importComponentsPath` is `~/src/components/pages/*.tsx` if you don't provide `importComponentsPath`
+
+
 And import it as a normal React component
 ```jsx
 import Hello from './README.md'
