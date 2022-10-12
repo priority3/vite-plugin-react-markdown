@@ -7,8 +7,8 @@ import { componentPlugin } from '@mdit-vue/plugin-component'
 import { Element } from 'domhandler'
 import type { ChildNode } from 'domhandler'
 import type { TransformResult } from 'vite'
-import type { MarkdownEnv, ResolvedOptions } from './type'
-import { getComponentPath, toArray, transformAttribs } from './utils'
+import type { MarkdownEnv, ResolvedOptions, importComponentOptions } from './type'
+import { getComponentPath, getDefaultImportCom, toArray, transformAttribs } from './utils'
 
 const IMPORT_COM_REG = /<\s*?([A-Z][^</>\s]*)\s*?\/?>/g
 
@@ -79,6 +79,7 @@ export function createMarkdown(options: ResolvedOptions) {
     let html = markdown.render(body, env)
     // get import components
     const { importComs } = getImportComInMarkdown(html, wrapperComponentName)
+
     const root = parseDocument(html, { lowerCaseTags: false })
     if (root.children.length) {
       Array.from(root.children).forEach((e) => {
@@ -114,12 +115,17 @@ export function createMarkdown(options: ResolvedOptions) {
 
     let markdownComponentsImp = ''
     const keys = Object.keys(importComponentsPath)
-    if (importComs.length && keys.length) {
-      importComs.forEach((e) => {
-        if (keys.includes(e)) {
-          const componentPath = getComponentPath(id, importComponentsPath[e])
-          markdownComponentsImp += `import ${e} from '${componentPath}'\n`
-        }
+    if (importComs.length) {
+      let componentsImportPath: importComponentOptions
+      if (!keys.length)
+        componentsImportPath = getDefaultImportCom(importComs)
+
+      else
+        componentsImportPath = importComponentsPath
+
+      Object.keys(componentsImportPath).forEach((e) => {
+        const componentPath = getComponentPath(id, componentsImportPath[e])
+        markdownComponentsImp += `import ${e} from '${componentPath}'\n`
       })
     }
 
@@ -132,12 +138,8 @@ export function createMarkdown(options: ResolvedOptions) {
         })!.code}
         return markdown
       }
-    // `
-    // const compiledReactCode = `
-    //   export default function React__Markdown () {
-    //     return (${html})
-    //   }
-    // `
+    `
+
     if (transforms.after)
       html = transforms.after(compiledReactCode, id)
     let code = 'import React from \'react\'\n'

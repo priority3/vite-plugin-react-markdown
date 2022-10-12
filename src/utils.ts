@@ -1,6 +1,8 @@
 import { cwd } from 'process'
 import { dirname, isAbsolute, relative, resolve } from 'path'
-import type { Arrayable, AttribsType, Nullable } from './type'
+import { existsSync, readdirSync } from 'fs-extra'
+import pc from 'picocolors'
+import type { Arrayable, AttribsType, Nullable, importComponentOptions } from './type'
 /**
  * Convert `Arrayable<T>` to `Array<T>`
  *
@@ -37,4 +39,32 @@ export function transformAttribs(elementAttribs: AttribsType): void {
       }
     })
   }
+}
+
+export type ImportComType = importComponentOptions
+export const DEFAULT_IMPORT_PATH = './src/components/pages'
+
+export function getDefaultImportCom(importComs: string[]) {
+  const defaultPath = resolve(cwd(), DEFAULT_IMPORT_PATH)
+  const res: ImportComType = {}
+  if (!existsSync(defaultPath) && !!importComs) {
+    const componentsNames = importComs.join(' ')
+    // eslint-disable-next-line no-console
+    console.log(
+      pc.yellow(`
+        ⚠️ the md file had undefined component name \`${pc.bold(componentsNames)}\`
+        No default import component path found, please set it manually.
+      `),
+    )
+
+    return res
+  }
+  readdirSync(defaultPath, 'utf-8').forEach((comName) => {
+    if (comName.endsWith('.tsx')) {
+      const name = comName.replace('.tsx', '')
+      res[name.replace(/^\S/, s => s.toUpperCase())] = `${DEFAULT_IMPORT_PATH}/${name}`
+    }
+  })
+
+  return res
 }

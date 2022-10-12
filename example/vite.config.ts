@@ -9,9 +9,9 @@ export default defineConfig({
     Markdown({
       wrapperComponentName: 'ReactMarkdown',
       wrapperComponentPath: './src/components/page',
-      importComponentsPath: {
-        ReactTest: './src/components/pages/mdtest',
-      },
+      // importComponentsPath: {
+      //   Mdtest: './src/components/pages/mdtest',
+      // },
       markdownItUses: [
         prism,
       ],
