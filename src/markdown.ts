@@ -26,12 +26,10 @@ function extractEscapeToReact(html: string) {
 function getImportComInMarkdown(html: string, wrapperComponentName: string | null) {
   const whiteList = ['React.Fragment', 'React__Markdown']
   wrapperComponentName && whiteList.push(wrapperComponentName)
-  const importComs = []
-  let match = IMPORT_COM_REG.exec(html)
-  if (match && !whiteList.includes(match[1]))
-    importComs.push(match[1])
+  const importComs: Array<string> = []
+  let match
 
-  while (IMPORT_COM_REG.exec(html)) {
+  while (match !== null) {
     match = IMPORT_COM_REG.exec(html)
     if (match && !importComs.includes(match[1]) && !whiteList.includes(match[1]))
       importComs.push(match[1])
