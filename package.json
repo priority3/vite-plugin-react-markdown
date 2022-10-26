@@ -22,7 +22,9 @@
     "example:build": "pnpm -C example run build",
     "test": "vitest",
     "build": "tsup",
-    "release": "bumpp --commit --tag --push && npm publish --access public"
+    "release": "bumpp --commit --tag --push && npm publish --access public",
+    "lint": "eslint . --cache",
+    "lint:fix": "pnpm run lint --fix"
   },
   "peerDependencies": {
     "react": "^18.0.0",
@@ -42,13 +44,15 @@
     "picocolors": "^1.0.0"
   },
   "devDependencies": {
-    "@pity/eslint-config": "^0.1.9",
+    "@pity/eslint-config-react": "^0.1.9",
+    "@pity/eslint-config-ts": "^0.1.9",
     "@types/babel__core": "^7.1.19",
     "@types/fs-extra": "^9.0.13",
     "@types/markdown-it": "^12.2.3",
     "@types/node": "^18.7.23",
     "bumpp": "^8.2.1",
     "eslint": "^8.24.0",
+    "eslint-define-config": "^1.8.0",
     "rimraf": "^3.0.2",
     "tsup": "^6.2.3",
     "typescript": "^4.8.4",

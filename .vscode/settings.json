@@ -1,5 +1,7 @@
 {
-  "prettier.enable": false,
-  "prettier": false,
+  "prettier.enable": "false",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
   "cSpell.ignoreWords": ["tsup"]
 }

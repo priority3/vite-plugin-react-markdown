@@ -21,6 +21,8 @@ function extractEscapeToReact(html: string) {
     .replace(/&amp;/g, '&')
     .replace(/<!--/g, '{/*')
     .replace(/-->/g, '*/}')
+    .replace(/{{&#x2018;<&#x2019;}}/g, '&lt;')
+    .replace(/{{&#x201c;<&#x201d;}}/g, '&lt;')
 }
 
 function getImportComInMarkdown(html: string, wrapperComponentName: string | null) {
@@ -86,7 +88,9 @@ export function createMarkdown(options: ResolvedOptions) {
         markCodeAsPre(e)
       })
     }
+
     const h = render(root, { selfClosingTags: true })
+
     html = extractEscapeToReact(h)
 
     // set class
@@ -130,14 +134,14 @@ export function createMarkdown(options: ResolvedOptions) {
     }
 
     const compiledReactCode = `
-      export default function React__Markdown () {
-        ${transformSync(html, {
-          ast: false,
-          presets: ['@babel/preset-react'],
-          plugins: [],
-        })!.code}
-        return markdown
-      }
+    export default function React__Markdown () {
+      ${transformSync(html, {
+        ast: false,
+        presets: ['@babel/preset-react'],
+        plugins: [],
+      })!.code}
+      return markdown
+    }
     `
 
     if (transforms.after)
