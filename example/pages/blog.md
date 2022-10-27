@@ -14,8 +14,8 @@ date: 2022-07-02 09:30:21
 
 a.length > b.length
 
-a.length {{'<'}} b.length
-a.length {{"<"}} b.length
+a.length < b.length
+
 
 use vite
 

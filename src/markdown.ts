@@ -15,14 +15,10 @@ const IMPORT_COM_REG = /<\s*?([A-Z][^</>\s]*)\s*?\/?>/g
 function extractEscapeToReact(html: string) {
   return html.replace(/"vfm{{/g, '{{')
     .replace(/}}vfm"/g, '}}')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
     .replace(/&amp;/g, '&')
     .replace(/<!--/g, '{/*')
     .replace(/-->/g, '*/}')
-    .replace(/{{&#x2018;<&#x2019;}}/g, '&lt;')
-    .replace(/{{&#x201c;<&#x201d;}}/g, '&lt;')
 }
 
 function getImportComInMarkdown(html: string, wrapperComponentName: string | null) {
@@ -162,11 +158,6 @@ export function createMarkdown(options: ResolvedOptions) {
       if (node instanceof Element) {
         if (node.tagName)
           transformAttribs(node.attribs)
-        if (node.tagName === 'code') {
-          const codeContent = render(node, { decodeEntities: true })
-          node.attribs.dangerouslySetInnerHTML = `vfm{{ __html: \`${codeContent.replace(/([\\`])/g, '\\$1')}\`}}vfm`
-          node.childNodes = []
-        }
         if (node.childNodes.length) {
           node.childNodes.forEach((e) => {
             markCodeAsPre(e)
