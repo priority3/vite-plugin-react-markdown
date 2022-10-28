@@ -1,8 +1,11 @@
 import { cwd } from 'process'
 import { dirname, isAbsolute, relative, resolve } from 'path'
-import { existsSync, readdirSync } from 'fs-extra'
+import fs from 'fs-extra'
 import pc from 'picocolors'
 import type { Arrayable, AttribsType, Nullable, importComponentOptions } from './type'
+
+const { existsSync, readdirSync } = fs
+
 /**
  * Convert `Arrayable<T>` to `Array<T>`
  *
