@@ -16,11 +16,16 @@ a.length > b.length
 
 a.length < b.length
 
-
 use vite
 
-## code
+{""""}
 
+"}
+
+## code
 ```js
 const a = 100
+
+const lang = 5000
+
 ```

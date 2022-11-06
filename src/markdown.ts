@@ -13,12 +13,18 @@ import { getComponentPath, getDefaultImportCom, toArray, transformAttribs } from
 const IMPORT_COM_REG = /<\s*?([A-Z][^</>\s]*)\s*?\/?>/g
 
 function extractEscapeToReact(html: string) {
-  return html.replace(/"vfm{{/g, '{{')
+  return html
+    .replace(/{/g, '{"\\u007b"}')
+    .replace(/"vfm{{/g, '{{')
     .replace(/}}vfm"/g, '}}')
     .replace(/&quot;/g, '"')
     .replace(/&amp;/g, '&')
     .replace(/<!--/g, '{/*')
     .replace(/-->/g, '*/}')
+    .replace(/&#x2018;/g, '"')
+    .replace(/&#x2019;/g, '"')
+    .replace(/&#x201c;/g, '"')
+    .replace(/&#x201d;/g, '"')
 }
 
 function getImportComInMarkdown(html: string, wrapperComponentName: string | null) {
@@ -113,6 +119,17 @@ export function createMarkdown(options: ResolvedOptions) {
     }
     else { html = ` const markdown = ${html}` }
 
+    const compiledReactCode = `
+    export default function React__Markdown () {
+      ${transformSync(html, {
+        ast: false,
+        presets: ['@babel/preset-react'],
+        plugins: [],
+      })!.code}
+      return markdown
+    }
+    `
+
     let markdownComponentsImp = ''
     const keys = Object.keys(importComponentsPath)
     if (importComs.length) {
@@ -128,17 +145,6 @@ export function createMarkdown(options: ResolvedOptions) {
         markdownComponentsImp += `import ${e} from '${componentPath}'\n`
       })
     }
-
-    const compiledReactCode = `
-    export default function React__Markdown () {
-      ${transformSync(html, {
-        ast: false,
-        presets: ['@babel/preset-react'],
-        plugins: [],
-      })!.code}
-      return markdown
-    }
-    `
 
     if (transforms.after)
       html = transforms.after(compiledReactCode, id)
