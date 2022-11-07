@@ -24,6 +24,7 @@ importers:
       htmlparser2: ^8.0.1
       markdown-it: ^13.0.1
       picocolors: ^1.0.0
+      react: ^18.2.0
       rimraf: ^3.0.2
       tsup: ^6.2.3
       typescript: ^4.8.4
@@ -40,6 +41,7 @@ importers:
       htmlparser2: 8.0.1
       markdown-it: 13.0.1
       picocolors: 1.0.0
+      react: 18.2.0
     devDependencies:
       '@pity/eslint-config-react': 0.1.9_ypn2ylkkyfa5i233caldtndbqa
       '@pity/eslint-config-ts': 0.1.9_ypn2ylkkyfa5i233caldtndbqa

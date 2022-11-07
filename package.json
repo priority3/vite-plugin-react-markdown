@@ -26,10 +26,6 @@
     "lint": "eslint . --cache",
     "lint:fix": "pnpm run lint --fix"
   },
-  "peerDependencies": {
-    "react": "^18.0.0",
-    "vite": "^3.0.0"
-  },
   "dependencies": {
     "@babel/core": "^7.19.3",
     "@babel/preset-react": "^7.18.6",
@@ -41,7 +37,8 @@
     "fs-extra": "^10.1.0",
     "htmlparser2": "^8.0.1",
     "markdown-it": "^13.0.1",
-    "picocolors": "^1.0.0"
+    "picocolors": "^1.0.0",
+    "react": "^18.2.0"
   },
   "devDependencies": {
     "@pity/eslint-config-react": "^0.1.9",
