@@ -15,16 +15,17 @@ const IMPORT_COM_REG = /<\s*?([A-Z][^</>\s]*)\s*?\/?>/g
 function extractEscapeToReact(html: string) {
   return html
     .replace(/{/g, '{"\\u007b"}')
-    .replace(/"vfm{{/g, '{{')
+    .replace(/&#x2018;/g, '"')
+    .replace(/&#x2019;/g, '"')
+    .replace(/&#x201c;/g, '"')
+    .replace(/&#x201d;/g, '"')
+    .replace(/"vfm{"\\u007b"}{"\\u007b"}/g, '{{')
     .replace(/}}vfm"/g, '}}')
     .replace(/&quot;/g, '"')
     .replace(/&amp;/g, '&')
     .replace(/<!--/g, '{/*')
     .replace(/-->/g, '*/}')
-    .replace(/&#x2018;/g, '"')
-    .replace(/&#x2019;/g, '"')
-    .replace(/&#x201c;/g, '"')
-    .replace(/&#x201d;/g, '"')
+    .replace(/vfm<;/g, '&lt;')
 }
 
 function getImportComInMarkdown(html: string, wrapperComponentName: string | null) {
@@ -83,6 +84,7 @@ export function createMarkdown(options: ResolvedOptions) {
     let html = markdown.render(body, env)
     // get import components
     const { importComs } = getImportComInMarkdown(html, wrapperComponentName)
+    html = html.replace(/&lt;/g, 'vfm<;')
 
     const root = parseDocument(html, { lowerCaseTags: false })
     if (root.children.length) {
@@ -90,11 +92,11 @@ export function createMarkdown(options: ResolvedOptions) {
         markCodeAsPre(e)
       })
     }
-
-    const h = render(root, { selfClosingTags: true })
-
+    const h = render(root, {
+      selfClosingTags: true,
+      decodeEntities: false,
+    })
     html = extractEscapeToReact(h)
-
     // set class
     if (wrapperClasses) {
       html
@@ -164,6 +166,11 @@ export function createMarkdown(options: ResolvedOptions) {
       if (node instanceof Element) {
         if (node.tagName)
           transformAttribs(node.attribs)
+        if (node.tagName === 'code') {
+          const codeContent = render(node, { decodeEntities: true })
+          node.attribs.dangerouslySetInnerHTML = `vfm{{ __html: \`${codeContent.replace(/([\\`])/g, '\\$1')}\`}}vfm`
+          node.childNodes = []
+        }
         if (node.childNodes.length) {
           node.childNodes.forEach((e) => {
             markCodeAsPre(e)
