@@ -18,6 +18,8 @@ a.length < b.length
 
 use vite
 
+{"{"}
+
 {""""}
 
 "}
@@ -27,5 +29,14 @@ use vite
 const a = 100
 
 const lang = 5000
+
+const fun = (params) => {
+  const a = 1
+  const b = 2
+  if (a < b)
+    return 1
+
+  return 0
+}
 
 ```
