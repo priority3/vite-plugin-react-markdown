@@ -14,18 +14,18 @@ const IMPORT_COM_REG = /<\s*?([A-Z][^</>\s]*)\s*?\/?>/g
 
 function extractEscapeToReact(html: string) {
   return html
-    .replace(/{/g, '{"\\u007b"}')
+    .replace(/vfmbracket;/g, '{"\\u007b"}')
     .replace(/&#x2018;/g, '"')
     .replace(/&#x2019;/g, '"')
     .replace(/&#x201c;/g, '"')
     .replace(/&#x201d;/g, '"')
-    .replace(/"vfm{"\\u007b"}{"\\u007b"}/g, '{{')
+    .replace(/"vfm{{/g, '{{')
     .replace(/}}vfm"/g, '}}')
     .replace(/&quot;/g, '"')
     .replace(/&amp;/g, '&')
     .replace(/<!--/g, '{/*')
     .replace(/-->/g, '*/}')
-    .replace(/vfm<;/g, '&lt;')
+    .replace(/vfmless;/g, '&lt;')
 }
 
 function getImportComInMarkdown(html: string, wrapperComponentName: string | null) {
@@ -84,7 +84,9 @@ export function createMarkdown(options: ResolvedOptions) {
     let html = markdown.render(body, env)
     // get import components
     const { importComs } = getImportComInMarkdown(html, wrapperComponentName)
-    html = html.replace(/&lt;/g, 'vfm<;')
+
+    html = html.replace(/&lt;/g, 'vfmless;')
+      .replace(/{/g, 'vfmbracket;')
 
     const root = parseDocument(html, { lowerCaseTags: false })
     if (root.children.length) {
@@ -96,6 +98,7 @@ export function createMarkdown(options: ResolvedOptions) {
       selfClosingTags: true,
       decodeEntities: false,
     })
+
     html = extractEscapeToReact(h)
     // set class
     if (wrapperClasses) {
@@ -167,8 +170,13 @@ export function createMarkdown(options: ResolvedOptions) {
         if (node.tagName)
           transformAttribs(node.attribs)
         if (node.tagName === 'code') {
-          const codeContent = render(node, { decodeEntities: true })
-          node.attribs.dangerouslySetInnerHTML = `vfm{{ __html: \`${codeContent.replace(/([\\`])/g, '\\$1')}\`}}vfm`
+          let codeContent = render(node, { decodeEntities: true })
+          codeContent
+          = codeContent
+              .replace(/([\\`])/g, '\\$1')
+              .replace(/vfmless;/g, '<')
+              .replace(/vfmbracket;/g, '{')
+          node.attribs.dangerouslySetInnerHTML = `vfm{{ __html: \`${codeContent}\`}}vfm`
           node.childNodes = []
         }
         if (node.childNodes.length) {
