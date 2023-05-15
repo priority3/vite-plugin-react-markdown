@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env DEBUG=vite-plugin-vue-markdown:* vite",
-    "build": "cross-env DEBUG=vite-plugin-vue-markdown:* vite build"
+    "dev": "cross-env DEBUG=vite-plugin-reactmarkdown:* vite",
+    "build": "cross-env DEBUG=vite-plugin-react-markdown:* vite build"
   },
   "dependencies": {
     "markdown-it-prism": "^2.3.0",
